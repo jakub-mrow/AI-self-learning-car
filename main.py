@@ -7,10 +7,8 @@ import neat
 WIDTH = 1920
 HEIGHT = 1080
 pygame.display.set_caption("AI self driving car")
-
 FPS = 60
 
-#TRACK = pygame.image.load(os.path.join("assets", "map.png"))
 CAR_IMAGE = pygame.image.load(os.path.join("assets", "car.png"))
 
 CAR_SIZE_X = 60
@@ -40,7 +38,7 @@ class Car:
 
     def draw(self, screen):
         screen.blit(self.rotated_body, self.position)
-        self.draw_radars(screen)
+        #self.draw_radars(screen)
 
     def radar(self, degree, map):
         length = 0
@@ -120,7 +118,6 @@ class Car:
         rotated_image = rotated_image.subsurface(rotated_rectangle).copy()
         return rotated_image
 
-
 def main(genomes, config):
     clock = pygame.time.Clock()
     run = True
@@ -183,7 +180,6 @@ def main(genomes, config):
         pygame.display.flip()
         clock.tick(FPS)
 
-
 if __name__ == '__main__':
     config_path = "./config.txt"
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
@@ -194,6 +190,5 @@ if __name__ == '__main__':
     population.add_reporter(stats)
 
     population.run(main, 1000)
-    #main()
     
 
