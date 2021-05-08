@@ -38,7 +38,7 @@ class Car:
 
     def draw(self, screen):
         screen.blit(self.rotated_body, self.position)
-        #self.draw_radars(screen)
+        self.draw_radars(screen)
 
     def radar(self, degree, map):
         length = 0
@@ -56,8 +56,8 @@ class Car:
     def draw_radars(self, screen):
         for radar in self.radars:
             pos = radar[0]
-            pygame.draw.line(screen, (0,255,0), self.position_center, pos, 1)
-            pygame.draw.circle(screen, (0,255,0), pos, 5)
+            pygame.draw.line(screen, (255,255,0), self.position_center, pos, 1)
+            pygame.draw.circle(screen, (255,255,0), pos, 5)
 
     def check_crash(self,map):
         self.alive = True
@@ -134,7 +134,7 @@ def main(genomes, config):
 
         cars.append(Car())
 
-    TRACK = pygame.image.load(os.path.join("assets", "map.png")).convert() 
+    TRACK = pygame.image.load(os.path.join("assets", "map2.png")).convert() 
     counter = 0
 
     while run:
