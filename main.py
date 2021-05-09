@@ -120,23 +120,20 @@ class Car:
         return rotated_image
 
 def main(genomes, config):
-    clock = pygame.time.Clock()
-    run = True
-    cars = []
-    networks = []
-
     pygame.init()
     WINDOW = pygame.display.set_mode((WIDTH,HEIGHT))
-       
+    clock = pygame.time.Clock()
+    TRACK = pygame.image.load(os.path.join("assets", "map2.png")).convert() 
+    counter = 0
+    run = True
+
+    cars = []
+    networks = []
     for i, g in genomes:
         net = neat.nn.FeedForwardNetwork.create(g, config)
         networks.append(net)
         g.fitness = 0
-
         cars.append(Car())
-
-    TRACK = pygame.image.load(os.path.join("assets", "map2.png")).convert() 
-    counter = 0
 
     while run:
         for event in pygame.event.get():
@@ -150,7 +147,6 @@ def main(genomes, config):
         for i, car in enumerate(cars):
             output = networks[i].activate(car.get_data())
             choice = output.index(max(output))
-
             if choice == 0:
                 car.angle += 10 
             elif choice == 1:
@@ -162,7 +158,6 @@ def main(genomes, config):
                 car.speed += 2 
 
         count_alive = 0
-        
         for i, car in enumerate(cars):
             if car.get_alive():
                 count_alive += 1
@@ -184,7 +179,6 @@ def main(genomes, config):
         pygame.display.flip()
         clock.tick(FPS)
 
-
 def menu():
     pygame.init()
     bg = pygame.image.load(os.path.join("assets", "background.png"))
@@ -200,7 +194,6 @@ def menu():
     click = False
 
     while True:
-        click = False
         screen.fill((255,255,255))
         screen.blit(bg, (0,0))
         screen.blit(button_draw, (740,350))
@@ -219,7 +212,7 @@ def menu():
         if b_exit.collidepoint((mx,my)):
             if click:
                 sys.exit()
-        
+        click = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -236,8 +229,7 @@ def menu():
         menu_clock.tick(60)
         
 def game():
-    global repeats
-    repeats = 100
+    repeats = 10
     config_path = "./config.txt"
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
 
