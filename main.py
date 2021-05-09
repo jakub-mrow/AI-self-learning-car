@@ -3,6 +3,7 @@ import os
 import math
 import sys
 import neat
+from pygame.locals import *
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -142,6 +143,9 @@ def main(genomes, config):
             if event.type == pygame.QUIT:
                 sys.exit(0)
                 run = False
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    run = False
 
         for i, car in enumerate(cars):
             output = networks[i].activate(car.get_data())
@@ -180,7 +184,60 @@ def main(genomes, config):
         pygame.display.flip()
         clock.tick(FPS)
 
-if __name__ == '__main__':
+
+def menu():
+    pygame.init()
+    bg = pygame.image.load(os.path.join("assets", "background.png"))
+    bg = pygame.transform.scale(bg, (1920,1080))
+    button_draw = pygame.image.load(os.path.join("assets", "draw.png"))
+    button_draw = pygame.transform.scale(button_draw, (400,100))
+    button_ready_maps = pygame.image.load(os.path.join("assets", "ready.png"))
+    button_ready_maps = pygame.transform.scale(button_ready_maps, (400,100))
+    button_exit = pygame.image.load(os.path.join("assets", "exit2.png"))
+    button_exit = pygame.transform.scale(button_exit, (400,100))
+    screen = pygame.display.set_mode((WIDTH,HEIGHT))
+    menu_clock = pygame.time.Clock()
+    click = False
+
+    while True:
+        click = False
+        screen.fill((255,255,255))
+        screen.blit(bg, (0,0))
+        screen.blit(button_draw, (740,350))
+        screen.blit(button_ready_maps, (740,500))
+        screen.blit(button_exit, (740,650))
+
+        b_ready_maps = pygame.Rect(740,500,400,100)
+        b_draw = pygame.Rect(740,350,400,100)
+        b_exit = pygame.Rect(740,650,400,100)
+
+        mx, my = pygame.mouse.get_pos()
+
+        if b_ready_maps.collidepoint((mx,my)):
+            if click:
+                game()
+        if b_exit.collidepoint((mx,my)):
+            if click:
+                sys.exit()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        pygame.display.update()
+        menu_clock.tick(60)
+        
+def game():
+    global repeats
+    repeats = 100
     config_path = "./config.txt"
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, config_path)
 
@@ -189,6 +246,8 @@ if __name__ == '__main__':
     stats = neat.StatisticsReporter()
     population.add_reporter(stats)
 
-    population.run(main, 1000)
-    
+    population.run(main, repeats)
+
+menu()
+
 
