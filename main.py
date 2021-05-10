@@ -123,7 +123,7 @@ def main(genomes, config):
     pygame.init()
     WINDOW = pygame.display.set_mode((WIDTH,HEIGHT))
     clock = pygame.time.Clock()
-    TRACK = pygame.image.load(os.path.join("assets", "map2.png")).convert() 
+    TRACK = pygame.image.load(os.path.join("assets", map_name)).convert() 
     counter = 0
     run = True
 
@@ -235,13 +235,15 @@ def draw_menu():
     pygame.init()
     draw = False
     screen = pygame.display.set_mode((WIDTH,HEIGHT))
-    template = pygame.image.load(os.path.join("assets", "template.png"))
+    template = pygame.image.load(os.path.join("assets", "template2.png"))
+    screen.fill((255,255,255))
+    screen.blit(template,(0,0))
 
     menu_draw_clock = pygame.time.Clock()
     running = True
+
     while running:
-        screen.fill((255,255,255))
-        screen.blit(template,(0,0))
+        mx, my = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -252,6 +254,17 @@ def draw_menu():
                 draw = True
             if event.type == MOUSEBUTTONUP:
                 draw = False
+            if event.type == KEYDOWN:
+                if event.key == K_s:
+                    print("Saving file!")
+                    pygame.image.save(screen, "assets/saved_map.png")
+                    global map_name
+                    map_name = "saved_map.png"
+                    game()
+
+        if draw == True:
+            pygame.draw.circle(screen,(0,0,0), (mx,my), 62)
+            
         pygame.display.update()
         menu_draw_clock.tick(60)
 
