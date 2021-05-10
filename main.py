@@ -212,6 +212,9 @@ def menu():
         if b_exit.collidepoint((mx,my)):
             if click:
                 sys.exit()
+        if b_draw.collidepoint((mx,my)):
+            if click:
+                draw_menu()
         click = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -227,7 +230,32 @@ def menu():
 
         pygame.display.update()
         menu_clock.tick(60)
-        
+    
+def draw_menu():
+    pygame.init()
+    draw = False
+    screen = pygame.display.set_mode((WIDTH,HEIGHT))
+    template = pygame.image.load(os.path.join("assets", "template.png"))
+
+    menu_draw_clock = pygame.time.Clock()
+    running = True
+    while running:
+        screen.fill((255,255,255))
+        screen.blit(template,(0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+            if event.type == MOUSEBUTTONDOWN:
+                draw = True
+            if event.type == MOUSEBUTTONUP:
+                draw = False
+        pygame.display.update()
+        menu_draw_clock.tick(60)
+
+
 def game():
     repeats = 10
     config_path = "./config.txt"
